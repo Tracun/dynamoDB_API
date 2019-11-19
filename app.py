@@ -64,15 +64,13 @@ def query(table):
 def login():
     dynamo = DynamoDB('Users')
 
-    print('##### REQUEST.getJSON', request)
-    print(type(request))
+    print('###### Request: ######', request)
 
     if request.is_json:
         data = request.get_json()
-        dictItem = ast.literal_eval(data)
 
-        email = dictItem['email']
-        password = dictItem['password']
+        email = data['email']
+        password = data['password']
 
         response = dynamo.query('email', email)
 

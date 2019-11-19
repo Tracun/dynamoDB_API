@@ -29,7 +29,7 @@ def testUpdateUsers(ticker):
     assert(response.json()['ResponseMetadata']['HTTPStatusCode'] == 200)
 
 def testLogin():
-    user = "{'email':'tracuns@gmail.com', 'password':'1234'}"
+    user = {'email':'tracuns@gmail.com', 'password':'1234'}
     response = requests.post(api_url_base + '/api/gianini/Users/login', json=user)
 
     assert(response.json()[0]['email'] == 'tracuns@gmail.com')
@@ -38,8 +38,8 @@ def testLogin():
 if __name__ == '__main__':
 
     testLogin()
-    testInsertUsers()
-    testQueryUsers()
-    testDeleteUsers()
+    #testInsertUsers()
+    #testQueryUsers()
+    #testDeleteUsers()
     
     # testUpdateUsers()
