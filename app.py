@@ -1,5 +1,6 @@
 from flask_restful import Api
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, json
+import ast
 
 from dynamoDBCrud import DynamoDB
 
@@ -58,6 +59,29 @@ def query(table):
 
     response = dynamo.query(chave, valor)
     return jsonify(response)
+
+@app.route('/api/gianini/Users/login', methods=["POST"])
+def login():
+    dynamo = DynamoDB('Users')
+
+    print('##### REQUEST.getJSON', request)
+    print(type(request))
+
+    if request.is_json:
+        data = request.get_json()
+        dictItem = ast.literal_eval(data)
+
+        email = dictItem['email']
+        password = dictItem['password']
+
+        response = dynamo.query('email', email)
+
+        if(response[0]['email'] == email and response[0]['password'] == password):
+            return jsonify(response)
+
+        return 
+    else:
+        return jsonify(status="Request was not JSON")
 
 @app.errorhandler(400)
 def bad_request(e):

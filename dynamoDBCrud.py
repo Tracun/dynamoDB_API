@@ -65,7 +65,7 @@ class DynamoDB():
 		)
 		
 		items = response['Items']
-		print(items)
+		# print(items)
 		return items
 
 		# response = self.table.scan(
