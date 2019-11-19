@@ -64,7 +64,7 @@ def query(table):
 def login():
     dynamo = DynamoDB('Users')
 
-    print('###### Request: ######', request)
+    print('###### Request: ######', request.get_json())
 
     if request.is_json:
         data = request.get_json()
@@ -74,10 +74,10 @@ def login():
 
         response = dynamo.query('email', email)
 
-        if(response[0]['email'] == email and response[0]['password'] == password):
+        if response != [] and response[0]['email'] == email and response[0]['password'] == password:
             return jsonify(response)
 
-        return 
+        return jsonify({'email':None, 'password':None})
     else:
         return jsonify(status="Request was not JSON")
 
