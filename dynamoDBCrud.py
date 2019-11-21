@@ -43,33 +43,46 @@ class DynamoDB():
 		
 	def delete(self, chave):
 		#Convert to dict
-		dictChave = ast.literal_eval(chave)
-		return self.table.delete_item(
-			Key=dictChave
-		)
+		try:
+			dictChave = ast.literal_eval(chave)
+			return self.table.delete_item(
+				Key=dictChave
+			)
+		except Exception as e:
+			return {'erro':e}
 
 	def select(self, chave):
 		#Convert to dict
-		dictChave = ast.literal_eval(chave)
-		response = self.table.get_item(
-			Key=dictChave
-		)
-		item = response['Item']
-		print(item)
-		return item
+		try:
+			response = self.table.get_item(
+				Key=chave
+			)
 
+			if 'Item' in response:
+				return response['Item']
+			else:
+				return {'message':'Not found'}
+		except Exception as e:
+			print('Erro exception: ', e)
+			return {'Erro':e}
 		
 	def query(self, chave, valor):
-		response = self.table.query(
-			KeyConditionExpression=Key(chave).eq(valor)
-		)
-		
-		items = response['Items']
-		# print(items)
-		return items
 
-		# response = self.table.scan(
-		# 	FilterExpression=Attr('first_name').begins_with('J') & Attr('account_type').eq('super_user')
-		# )
-		# items = response['Items']
-		# print(items)
+		try:
+			response = self.table.query(
+				KeyConditionExpression=Key(chave).eq(valor)
+			)
+
+			if 'Items' in response:
+				return response['Items']
+			else:
+				return {'message':'Not found'}
+
+			# response = self.table.scan(
+			# 	FilterExpression=Attr('first_name').begins_with('J') & Attr('account_type').eq('super_user')
+			# )
+			# items = response['Items']
+			# print(items)
+		except Exception as e:
+			print('Erro exception: ', e)
+			return {'Erro':e}
