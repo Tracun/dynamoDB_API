@@ -44,6 +44,19 @@ def delete(table):
     else:
         return jsonify(status="Request was not JSON")
 
+@app.route('/api/gianini/<string:table>/select', methods=["POST"])
+def select(table):
+    dynamo = DynamoDB(table)
+
+    print('###### Request: ######', request.get_json())
+
+    if request.is_json:
+        data = request.get_json()
+        print (data)
+        response = dynamo.select(data);
+        return jsonify(response)
+    else:
+        return jsonify(status="Request was not JSON")
 
 @app.route('/api/gianini/<string:table>/query', methods=["POST"])
 def query(table):
@@ -51,13 +64,14 @@ def query(table):
     query_parameters = request.args
 
     chave = query_parameters['key']
-    valor = query_parameters['email']
+    valor = query_parameters['value']
     print('key={0} & valor={1}'.format(chave, valor))
 
     if chave == '' or valor == '':
         return jsonify(bad_request(400))
 
     response = dynamo.query(chave, valor)
+    print(response)
     return jsonify(response)
 
 @app.route('/api/gianini/Users/login', methods=["POST"])
@@ -69,15 +83,20 @@ def login():
     if request.is_json:
         data = request.get_json()
 
-        email = data['email']
+        cnpj = data['cnpj']
+        
+        user = {
+            'cnpj':cnpj
+        }
+
         password = data['password']
 
-        response = dynamo.query('email', email)
+        response = dynamo.select(user);
 
-        if response != [] and response[0]['email'] == email and response[0]['password'] == password:
+        if 'cnpj' in response and response['cnpj'] == cnpj and response['password'] == password:
             return jsonify(response)
 
-        return jsonify({'email':None, 'password':None})
+        return jsonify({'cnpj':None, 'password':None})
     else:
         return jsonify(status="Request was not JSON")
 
