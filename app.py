@@ -17,7 +17,7 @@ def insert(table):
         response = dynamoDB.insert(data)
         return jsonify(response)
     else:
-        return jsonify(status="Request was not JSON")
+        return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 @app.route('/api/gianini/<string:table>/update', methods=["POST"])
 def update(table):
@@ -29,7 +29,7 @@ def update(table):
         response = dynamoDB.update(data)
         return jsonify(response)
     else:
-        return jsonify(status="Request was not JSON")
+        return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 
 @app.route('/api/gianini/<string:table>/delete', methods=["POST"])
@@ -42,7 +42,7 @@ def delete(table):
         response = dynamoDB.delete(data)
         return jsonify(response)
     else:
-        return jsonify(status="Request was not JSON")
+        return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 @app.route('/api/gianini/<string:table>/select', methods=["POST"])
 def select(table):
@@ -53,10 +53,10 @@ def select(table):
     if request.is_json:
         data = request.get_json()
         print (data)
-        response = dynamo.select(data);
+        response = dynamo.select(data)
         return jsonify(response)
     else:
-        return jsonify(status="Request was not JSON")
+        return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 @app.route('/api/gianini/<string:table>/query', methods=["POST"])
 def query(table):
@@ -91,14 +91,17 @@ def login():
 
         password = data['password']
 
-        response = dynamo.select(user);
+        response = dynamo.select(user)
 
-        if 'cnpj' in response and response['cnpj'] == cnpj and response['password'] == password:
+        print("response aap.py", response)
+        print("response aap.py", response[0])
+
+        if 'cnpj' in response[0]['response'] and response[0]['response']['cnpj'] == cnpj and response[0]['response']['password'] == password:
             return jsonify(response)
 
         return jsonify({'cnpj':None, 'password':None})
     else:
-        return jsonify(status="Request was not JSON")
+        return jsonify({'message': 'Request was not JSON', 'response': {}}), 500
 
 @app.errorhandler(400)
 def bad_request(e):
