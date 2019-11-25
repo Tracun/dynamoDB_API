@@ -42,6 +42,13 @@ def testSelect():
 
     assert(response.json()['date'] == '27112019')
 
+def testScan():
+
+    response = requests.post(api_url_base + endPoint + '/{0}/{1}'.format('SchedulingDates', 'scan'))
+    print(response.json)
+
+    # assert(response.json()['date'] == '27112019')
+
 def testLogin():
     user = {'cnpj':'123456789', 'password':'1234'}
     response = requests.post(api_url_base + '/api/gianini/Users/login', json=user)
@@ -52,6 +59,7 @@ def testLogin():
 
 if __name__ == '__main__':
 
+    testScan()
     testSelect()
     testQuerySchedulingDates()
     testLogin()

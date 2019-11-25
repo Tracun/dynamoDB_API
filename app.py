@@ -58,6 +58,14 @@ def select(table):
     else:
         return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
+@app.route('/api/gianini/<string:table>/scan', methods=["POST"])
+def scan(table):
+    dynamo = DynamoDB(table)
+
+    response = dynamo.scan()
+    print (response)
+    return jsonify(response)
+
 @app.route('/api/gianini/<string:table>/query', methods=["POST"])
 def query(table):
     dynamo = DynamoDB(table)
