@@ -1,6 +1,7 @@
 from flask_restful import Api
 from flask import Flask, jsonify, render_template, request, json
 import ast
+import decimal
 
 from dynamoDBCrud import DynamoDB
 
@@ -14,6 +15,8 @@ def insert(table):
     if request.is_json:
         data = request.get_json()
         print (data)
+        if('value' in data):
+            data['value'] = decimal.Decimal(str(data['value']))
         response = dynamoDB.insert(data)
         return jsonify(response)
     else:
@@ -26,6 +29,8 @@ def update(table):
     if request.is_json:
         data = request.get_json()
         print (data)
+        if('value' in data):
+            data['value'] = decimal.Decimal(str(data['value']))
         response = dynamoDB.update(data)
         return jsonify(response)
     else:
