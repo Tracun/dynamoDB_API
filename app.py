@@ -69,7 +69,12 @@ def scan(table):
 
     response = dynamo.scan()
     print (response)
-    return jsonify(response)
+    return json.dumps(response, default=decimal_default)
+
+def decimal_default(obj):
+    if isinstance(obj, decimal.Decimal):
+        return float(obj)
+    raise TypeError
 
 @app.route('/api/gianini/<string:table>/query', methods=["POST"])
 def query(table):
