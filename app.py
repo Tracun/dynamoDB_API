@@ -15,8 +15,10 @@ def insert(table):
     if request.is_json:
         data = request.get_json()
         print (data)
-        if('value' in data):
-            data['value'] = decimal.Decimal(str(data['value']))
+        if('valueHospital' in data or 'valueRepresentante' in data):
+            data['valueHospital'] = decimal.Decimal(str(data['valueHospital']))
+            data['valueRepresentante'] = decimal.Decimal(str(data['valueRepresentante']))
+            data['quant'] = decimal.Decimal(str(data['quant']))
         response = dynamoDB.insert(data)
         return jsonify(response)
     else:
@@ -29,11 +31,14 @@ def update(table):
     if request.is_json:
         data = request.get_json()
         print (data)
-        if('value' in data):
-            data['value'] = decimal.Decimal(str(data['value']))
+        if('valueHospital' in data or 'valueRepresentante' in data):
+            data['valueHospital'] = decimal.Decimal(str(data['valueHospital']))
+            data['valueRepresentante'] = decimal.Decimal(str(data['valueRepresentante']))
+            data['quant'] = decimal.Decimal(str(data['quant']))
         response = dynamoDB.update(data)
         return jsonify(response)
     else:
+        git commit -m '
         return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 
