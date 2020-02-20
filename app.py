@@ -1,14 +1,28 @@
 from flask_restful import Api
 from flask import Flask, jsonify, render_template, request, json
+from flask_httpauth import HTTPBasicAuth
 import ast
 import decimal
 
 from dynamoDBCrud import DynamoDB
 
+auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)  # api is a collection of objects, where each object contains a specific functionality (GET, POST, etc)
 
+#for testing only
+users = {
+    "tr": "hello",
+}
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in users:
+        return users.get(username)
+    return False
+
 @app.route('/api/gianini/<string:table>/insert', methods=["POST"])
+@auth.login_required
 def insert(table):
     dynamoDB = DynamoDB(table)
 
@@ -25,6 +39,7 @@ def insert(table):
         return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 @app.route('/api/gianini/<string:table>/update', methods=["POST"])
+@auth.login_required
 def update(table):
     dynamoDB = DynamoDB(table)
 
@@ -42,6 +57,7 @@ def update(table):
 
 
 @app.route('/api/gianini/<string:table>/delete', methods=["POST"])
+@auth.login_required
 def delete(table):
     dynamoDB = DynamoDB(table)
 
@@ -54,6 +70,7 @@ def delete(table):
         return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 @app.route('/api/gianini/<string:table>/select', methods=["POST"])
+@auth.login_required
 def select(table):
     dynamo = DynamoDB(table)
 
@@ -68,6 +85,7 @@ def select(table):
         return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 @app.route('/api/gianini/<string:table>/scan', methods=["POST"])
+@auth.login_required
 def scan(table):
     dynamo = DynamoDB(table)
 
@@ -81,6 +99,7 @@ def decimal_default(obj):
     raise TypeError
 
 @app.route('/api/gianini/<string:table>/query', methods=["POST"])
+@auth.login_required
 def query(table):
     dynamo = DynamoDB(table)
     query_parameters = request.args
@@ -97,6 +116,7 @@ def query(table):
     return jsonify(response)
 
 @app.route('/api/gianini/Users/login', methods=["POST"])
+@auth.login_required
 def login():
     dynamo = DynamoDB('Users')
 
