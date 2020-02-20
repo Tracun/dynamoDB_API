@@ -38,7 +38,6 @@ def update(table):
         response = dynamoDB.update(data)
         return jsonify(response)
     else:
-        git commit -m '
         return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
 
