@@ -4,7 +4,6 @@ from flask import jsonify, json
 import sys
 import ast
 
-
 class DynamoDB():
 
     SERVICE = 'dynamodb'
@@ -32,7 +31,7 @@ class DynamoDB():
             # return response
         except Exception as e:
             print('Erro exception: ', e)
-            return {'message': 'Error on insert', 'response': None}, 500
+            return {'message': 'Error on insert. {}'.format(e), 'response': None}, 500
 
     def update(self, item):
 
@@ -54,7 +53,7 @@ class DynamoDB():
 
             return {'message': 'Deleted', 'response': response['Item']}, 200
         except Exception as e:
-            {'message': 'Erro on delete'+e, 'response': None}, 500
+            {'message': 'Erro on delete. {}'.format(e), 'response': None}, 500
 
     def select(self, chave):
 
@@ -70,7 +69,7 @@ class DynamoDB():
                 return {'message': 'Not found', 'response': None}, 500
         except Exception as e:
             print('Erro exception: ', e)
-            return {'message': 'Erro on select', 'response': None}, 500
+            return {'message': 'Erro on select. {}'.format(e), 'response': None}, 500
 
     def scan(self):
 
@@ -90,7 +89,7 @@ class DynamoDB():
                 return {'message': 'Not found', 'response': None}, 500
         except Exception as e:
             print('Erro exception: ', e)
-            return {'message': 'Erro on scan', 'response': None}, 500
+            return {'message': 'Erro on scan. {}'.format(e), 'response': None}, 500
 
     def query(self, chave, valor):
 
@@ -110,4 +109,4 @@ class DynamoDB():
             # items = response['Items']
             # print(items)
         except Exception as e:
-            return {'message': 'Erro on query', 'response': None}, 500
+            return {'message': 'Erro on query. {}'.format(e), 'response': None}, 500
