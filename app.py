@@ -19,6 +19,15 @@ def insert(table):
             data['valueHospital'] = decimal.Decimal(str(data['valueHospital']))
             data['valueRepresentante'] = decimal.Decimal(str(data['valueRepresentante']))
             data['quant'] = decimal.Decimal(str(data['quant']))
+
+        elif ('maoObraValue' in data or 'valorVisita' in data):
+            data['maoObraValue'] = decimal.Decimal(str(data['maoObraValue']))
+            data['valorVisita'] = decimal.Decimal(str(data['valorVisita']))
+
+            if (data['replacedParts'] != None):
+                for replacedParts in data['replacedParts']:
+                    replacedParts['value'] = decimal.Decimal(str(replacedParts['value']))
+            
         response = dynamoDB.insert(data)
         return jsonify(response)
     else:
