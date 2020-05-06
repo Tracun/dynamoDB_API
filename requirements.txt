@@ -2,4 +2,4 @@ Flask
 Flask-RESTful
 zappa
 boto3
-
+AWS
