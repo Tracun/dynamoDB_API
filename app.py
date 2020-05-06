@@ -27,7 +27,7 @@ def insert(table):
             if (data['replacedParts'] != None):
                 for replacedParts in data['replacedParts']:
                     replacedParts['value'] = decimal.Decimal(str(replacedParts['value']))
-					replacedParts['quant'] = decimal.Decimal(str(replacedParts['quant']))
+                    replacedParts['quant'] = decimal.Decimal(str(replacedParts['quant']))
             
         response = dynamoDB.insert(data)
         return jsonify(response)
