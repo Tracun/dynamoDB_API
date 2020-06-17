@@ -73,7 +73,8 @@ def select(table):
         data = request.get_json()
         print (data)
         response = dynamo.select(data)
-        return jsonify(response)
+        
+        return json.dumps(response, default=decimal_default)
     else:
         return jsonify({'message': 'Request was not JSON', 'response': None}), 500
 
