@@ -107,32 +107,32 @@ def query(table):
     print(response)
     return jsonify(response)
 
-@app.route('/api/gianini/Users/login', methods=["POST"])
-def login():
-    dynamo = DynamoDB('Users')
+@app.route('/api/gianini/<string:table>/login', methods=["POST"])
+def login(table):
+    dynamo = DynamoDB(table)
 
     print('###### Request: ######', request.get_json())
 
     if request.is_json:
         data = request.get_json()
 
-        cnpj = data['cnpj']
+        id = data['id']
         
         user = {
-            'cnpj':cnpj
+            'id':id
         }
 
         password = data['password']
 
         response = dynamo.select(user)
 
-        print("response aap.py", response)
-        print("response aap.py", response[0])
+        # print("response app.py", response)
+        # print("response app.py", response[0])
 
-        if 'cnpj' in response[0]['response'] and response[0]['response']['cnpj'] == cnpj and response[0]['response']['password'] == password:
+        if 'id' in response[0]['response'] and response[0]['response']['id'] == id and response[0]['response']['password'] == password:
             return jsonify(response)
 
-        return jsonify({'cnpj':None, 'password':None})
+        return jsonify({'id':None, 'password':None})
     else:
         return jsonify({'message': 'Request was not JSON', 'response': {}}), 500
 
